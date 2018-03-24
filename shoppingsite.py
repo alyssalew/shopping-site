@@ -63,20 +63,47 @@ def show_shopping_cart():
     # The logic here will be something like:
     #
     # - get the cart dictionary from the session
+    if "cart" in session:
+        pass
+    else:
+        session["cart"] = {}
+
     # - create a list to hold melon objects and a variable to hold the total
     #   cost of the order
+    melon_objects = []
+    total_cost = 0
     # - loop over the cart dictionary, and for each melon id:
+    #for cart[melon_id] in cart:
+    for mel_id, quantity in session['cart'].items():
     #    - get the corresponding Melon object
+        melon_obj = melons.get_by_id(mel_id)
+        melon_objects.append(melon_obj)
     #    - compute the total cost for that type of melon
+        melon_total_cost = quantity * melon_obj.price
     #    - add this to the order total
+        total_cost = total_cost + melon_total_cost
     #    - add quantity and total cost as attributes on the Melon object
+        melon_obj.quantity = quantity
+        melon_obj.cost = melon_total_cost
     #    - add the Melon object to the list created above
+        melon_objects.append(melon_obj.quantity)
+        melon_objects.append(melon_obj.cost)
+
+    print melon_objects
     # - pass the total order cost and the list of Melon objects to the template
     #
     # Make sure your function can also handle the case wherein no cart has
     # been added to the session
 
-    return render_template("cart.html")
+
+
+    return render_template("cart.html",
+                           name = melon_obj.common_name,
+                             price = melon_obj.price,
+                             cost = melon_obj.cost,
+                             quant = melon_obj.quantity,
+                             total = total_cost
+                             )
 
 
 @app.route("/add_to_cart/<melon_id>")
@@ -98,7 +125,7 @@ def add_to_cart(melon_id):
     # - flash a success message
     # - redirect the user to the cart page
 
-    if session["cart"]:
+    if "cart" in session:
         pass
     else:
         session["cart"] = {}
@@ -111,9 +138,9 @@ def add_to_cart(melon_id):
 
     flash("Your melon was sucessfully added to the cart")
 
-    print session["cart"]
+    #print session["cart"]
 
-    return "Oops! This needs to be implemented!"
+    return redirect("/cart")
 
 
 @app.route("/login", methods=["GET"])
