@@ -13,16 +13,23 @@
         </tr>
         </thead>
         <tbody>
+        
+        {% for melon_object in cart_melons %}
+
         <tr>
-            <td>{{ name }}</td>
-            <td>{{ quant }}</td>
-            <td>{{ price }}</td>
-            <td>{{ cost }}</td>
+            <td>{{ melon_object.common_name }}</td>
+            <td>{{ melon_object.quantity }}</td>
+            <td>{{ "%0.2f" | format(melon_object.price )}}</td>
+            <td>{{ "%0.2f" | format(melon_object.cost) }}</td>
         </tr>
+
+        {%% endfor %}
+
+
         </tbody>
     </table>
 
-    <h3>Total: {{total}}</h3>
+    <h3>Total: {{"%0.2f" | format(total)}}</h3>
 
     <a href="/checkout" class="btn btn-large btn-primary">Check Out</a>
 

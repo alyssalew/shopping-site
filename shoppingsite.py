@@ -77,7 +77,6 @@ def show_shopping_cart():
     for mel_id, quantity in session['cart'].items():
     #    - get the corresponding Melon object
         melon_obj = melons.get_by_id(mel_id)
-        melon_objects.append(melon_obj)
     #    - compute the total cost for that type of melon
         melon_total_cost = quantity * melon_obj.price
     #    - add this to the order total
@@ -86,24 +85,26 @@ def show_shopping_cart():
         melon_obj.quantity = quantity
         melon_obj.cost = melon_total_cost
     #    - add the Melon object to the list created above
-        melon_objects.append(melon_obj.quantity)
-        melon_objects.append(melon_obj.cost)
+        melon_objects.append(melon_obj)
+
+        # melon_objects.append(melon_obj.quantity)
+        # melon_objects.append(melon_obj.cost)
 
     print melon_objects
+    print total_cost
     # - pass the total order cost and the list of Melon objects to the template
     #
     # Make sure your function can also handle the case wherein no cart has
     # been added to the session
 
 
-
     return render_template("cart.html",
-                           name = melon_obj.common_name,
-                             price = melon_obj.price,
-                             cost = melon_obj.cost,
-                             quant = melon_obj.quantity,
-                             total = total_cost
-                             )
+                           #   name = melon_obj.common_name,
+                           #   price = melon_obj.price,
+                           #   cost = melon_obj.cost,
+                           #   quant = melon_obj.quantity,
+                           total=total_cost,
+                           cart_melons=melon_objects)  # Pass in list of melon objects can iterate in jinja
 
 
 @app.route("/add_to_cart/<melon_id>")
@@ -187,4 +188,5 @@ def checkout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug = True
+    app.run(host="0.0.0.0")
